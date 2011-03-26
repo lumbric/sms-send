@@ -1,0 +1,9 @@
+#!/usr/bin/env xdg-open
+
+[Desktop Entry]
+Version=1.0
+Type=Application
+Terminal=false
+Exec=gnome-terminal --command='/PATH/TO/SCRIPT/sms-send/phonefind-and-sms.sh --archivefile /YOUR/ARCHIVE/DIR/sent-with-gammu' --hide-menubar --working-directory='/PATH/TO/SCRIPT/sms-send/' --title='Send SMS to contact'
+Icon=/usr/share/icons/gnome/scalable/devices/phone.svg
+Name=Send SMS

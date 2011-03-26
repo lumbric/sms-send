@@ -1,0 +1,63 @@
+    -----------------------------------------------------
+   | sms scripts                                         |
+   | scripts for easier use of gammu to send sms         |
+   | v0.2 - 2010-08-22   lumbric@gmail.com               |
+    -----------------------------------------------------
+
+
+
+=== Installation ===
+Extract the tar.gz file to a destination of your choice and use the
+scripts from there.
+
+More comfortable might be:
+1) create symlinks
+ln -s /path/to/sms-scripts/phonefind.sh /usr/local/bin/phonefind
+ln -s /path/to/sms-scripts/sendmassSMS.sh /usr/local/bin/sendmassSMS
+
+2) create script
+create a executable shell script in /usr/local/bin or so:
+#!/bin/bash
+/path/to/sms-scripts/sendpersonalSMS.sh --archivefile /your/archive/sent-with-gammu "$1" "$2"
+
+3) create launcher
+gnome-terminal --command='/path/to/sms-scripts/phonefind-and-sms.sh --archivfile /your/archive/sent-with-gammu' --hide-menubar --working-directory='/path/to/sms-scripts/' --title='Send SMS to contact'
+
+4) adjust paths in phonefind.sh
+Note: the important grep-commands should be the last ones
+
+
+=== Known Problems / 2do ===
+ - archive file is stored hardcoded in phonefind.sh
+ - archive file given by argument is annoying, config would be better
+ - help text in sendpersonalSMS.sh and sendmassSMS.sh wrong (old)
+ - many things in German
+ - no character count while typing the message
+ - no search results while typing search pattern
+ - order of command line options can lead to errors
+ - bei problemen/abbrechen während gammu gibts trotzdem die meldung "done"
+
+
+=== Usage ===
+==== phonefind-and-sms.sh ====
+==== phonefind.sh ====
+==== sendmassSMS.sh ====
+==== sendpersonalSMS ====
+sendpersonalSMS.sh [options] NUMBER [TEXT]
+
+Options:
+--help		print this helptext
+--archivfile	path to an existing textfile
+
+NUMBER		recipient's number in format: 'Joe Lastname Whatever [0699123..]'
+		Don't forget the single quotes if 
+
+		Achtung 0043699... geht nicht!
+		es geht nur: +43699... oder 0699...	
+
+TEXT		message text to send through SMS
+		Optional paramater - if not given a dialog will
+		pop up to enter the message.
+
+
+
