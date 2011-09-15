@@ -117,6 +117,10 @@ echo
 if [ $senderror -eq 0 ]; then
 	echo 'Done.'
 else
-	echo 'An error might have occured.'
+	echo -e "\e[00;31m!!!!!!!!!!!!!!!!!!\e[00m"
+	echo -e "\e[00;31mDon't ignore this!\e[00m"
+	echo -e "\e[00;31m!!!!!!!!!!!!!!!!!!\e[00m"
+	echo 
+	echo -e "\e[00;31mAn error might have occured.\e[00m"
 fi
 
