@@ -16,6 +16,7 @@
 # --- Parameter ---
 maxchars=600    # Maximale Laenge von SMS
 archivedatei='~/sent-with-gammu'  # das ist nur der Default-Wert
+lockfile='/tmp/sendsms.lock'
 # ------------------
 
 # Bekannte Probleme:
@@ -87,6 +88,22 @@ echo "Any key to continue or [Ctrl] + [C] to abort."
 # Lies ein Zeichen ein...
 read -s -n1
 echo
+
+
+# Check for LOCK-File...
+if [ -e $lockfile ]; then
+  echo
+  echo -n 'Warte auf Ende von anderem SMS-Sendevorgang...'
+fi 
+while [ -e $lockfile ]; do
+  echo -n '.'
+  sleep 1
+done
+echo
+echo
+touch $lockfile
+
+
 echo Sende SMS...
 
 # Zum archivieren der SMS inklussive Ergebnis von gammu...
@@ -104,12 +121,15 @@ nummer=$(echo "$empfaenger"|egrep -o '\[[0-9+]+\]'|egrep -o '[0-9+]+')
 echo
 echo "$text"|gammu --sendsms TEXT $nummer -autolen $maxchars|tee -a "$archivedatei"
 
-senderror=$?
+senderror=${PIPESTATUS[1]}
+#senderror=$?
 
 echo '----------------------------' >> "$archivedatei"
 echo >> "$archivedatei"
 echo >> "$archivedatei"
 
+# Delete LOCK-File
+rm $lockfile
 
 echo 
 echo

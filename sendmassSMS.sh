@@ -14,7 +14,7 @@ maxchars=600    # Maximale Laenge von SMS
 delay=1         # Verzoegerung zwischen 2 versendeten SMS
 list=$1         # Pfad zur Datei mit den Nummern
 text=$2         # Text der per SMS versendet werden soll
-
+lockfile='/tmp/sendsms.lock'
 # ------------------
 
 
@@ -83,6 +83,21 @@ echo "Any key to continue or [Ctrl] + [C] to abort."
 # Lies ein Zeichen ein...
 read -sn 1
 echo
+
+
+# Check for LOCK-File...
+if [ -e $lockfile ]; then
+  echo
+  echo -n 'Warte auf Ende von anderem SMS-Sendevorgang...'
+fi
+while [ -e $lockfile ]; do
+  echo -n '.'
+  sleep 1
+done
+echo
+echo
+touch $lockfile
+
 echo Sende SMS...
 
 
@@ -124,7 +139,9 @@ egrep -o '^[^#]*' $list|while read empfaenger; do
 		
 		senderror=0
 		echo "$text"|gammu --sendsms TEXT $nummer -autolen $maxchars|tee -a "$logfilename"
-		senderror=$?
+
+		senderror=${PIPESTATUS[1]}
+		#senderror=$?
 				
 		i=$(($i+1))
 	fi
@@ -132,10 +149,21 @@ egrep -o '^[^#]*' $list|while read empfaenger; do
 	if [ $senderror -ne 0 ]; then
 		echo 
 		echo 
-		echo 'An error might have occured.'
+        	echo -e "\e[00;31mAn error might have occured.\e[00m"
+		echo
+		echo
+		echo -e "\e[00;31m!!!!!!!!!!!!!!!!!!\e[00m"
+	        echo -e "\e[00;31mDon't ignore this!\e[00m"
+        	echo -e "\e[00;31m!!!!!!!!!!!!!!!!!!\e[00m"
+	        echo 
+
 		exit $senderror
 	fi
 done
+
+# Delete LOCK-File
+rm $lockfile
+
 
 # Exit another time because loop is subshell
 exit $?
@@ -143,5 +171,4 @@ exit $?
 echo 
 echo 
 echo 'Done.'
-
 
